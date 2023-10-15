@@ -1,0 +1,4 @@
+name: Ryoko
+version: '${project.version}'
+main: kimu.klossom.ryoko.Ryoko
+api-version: '1.20'

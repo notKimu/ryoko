@@ -1,0 +1,22 @@
+### USE MINIMESSAGE FORMAT THANKS ###
+#####################################
+
+### Command usage
+only-player-command: "You need to be a player to use this command!"
+
+### Getting Players
+requested-player-not-online: "{player} is not on the server!"
+
+### Direct Messages
+direct-message-prefix: "{player} => {message}"
+
+### Teleporting
+unsecure-teleport-location: "<red>The spot you want to teleport to is unsecure! (there is void below)</red>"
+
+### TPA
+accepted-tpa: "<white>{player}</white> <green>accepted your TPA request! teleporting...</green>"
+
+self-accepted-tpa: "<red>How'd you accept a teleport request to yourself...</red>"
+accepted-nonexistent-tpa: "<red>I don't think {player} asked you for a teleport...</red>"
+rejected-nonexistent-tpa: "<red>Doesn't look like {player} asked you for a teleport...</red>"
+self-rejected-tpa: "<red>How do you reject a teleport request of... yourself...</red>"

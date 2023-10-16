@@ -1,14 +1,12 @@
 package kimu.klossom.ryoko.commands.warps
 
+import kimu.klossom.ryoko.providers.MessageProvider
+import kimu.klossom.ryoko.providers.MessageType
 import kimu.klossom.ryoko.providers.YamlProvider
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextComponent
-import net.kyori.adventure.text.format.NamedTextColor
+import kimu.klossom.ryoko.utils.checks.CommandChecks
 import org.bukkit.Location
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
-import org.bukkit.configuration.ConfigurationSection
-import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
 class Warp(private val plugin: Plugin) : Command("warp") {
@@ -19,12 +17,7 @@ class Warp(private val plugin: Plugin) : Command("warp") {
     }
 
     override fun execute(sender: CommandSender, commandLabel: String, args: Array<out String>?): Boolean {
-        if (sender !is Player || sender.player == null) {
-            sender.sendPlainMessage("You need to be a player to use this command!");
-            return false;
-        }
-        val player = requireNotNull(sender.player) {
-            sender.sendPlainMessage("You need to be a player to use this command!");
+        val player = requireNotNull(CommandChecks.isSenderPlayer(sender)) {
             return false;
         }
 
@@ -32,37 +25,34 @@ class Warp(private val plugin: Plugin) : Command("warp") {
 
         if (args.isNullOrEmpty()) {
             val playerWarps = requireNotNull(warpFile.getConfigurationSection(player.name)) {
-                player.sendPlainMessage("You have no warps set!");
+                val noWarpsSetMessage = MessageProvider.getMessage(MessageType.WarpListEmpty);
+
+                player.sendRichMessage(noWarpsSetMessage);
                 return true;
             };
 
             val warpKeys = playerWarps.getKeys(false).joinToString(", ");
-            val playerWarpNamesMessage: TextComponent = Component.text("Your warps: ")
-                .color(NamedTextColor.WHITE)
-                .append(Component.text(warpKeys, NamedTextColor.BLUE));
+            val playerWarpKeysMessage = MessageProvider.getMessage(MessageType.WarpList)
+                .replace("{warps}", warpKeys);
 
-            player.sendMessage(playerWarpNamesMessage);
+            player.sendRichMessage(playerWarpKeysMessage);
             return true;
         }
 
 
         val warpName = args[0];
         val warpLocation = requireNotNull(warpFile.get("${player.name}.${warpName}")) {
-            val warpNotFound: TextComponent = Component.text("The warp ")
-                .color(NamedTextColor.RED)
-                .append(Component.text(warpName, NamedTextColor.WHITE))
-                .append(Component.text(" does not exist!"));
+            val warpNotFoundMessage = MessageProvider.getMessage(MessageType.WarpNotFound)
+                .replace("{warp}", warpName);
 
-            player.sendMessage(warpNotFound);
+            player.sendRichMessage(warpNotFoundMessage);
             return false;
         } as Location;
 
-        val warpingMessage: TextComponent = Component.text("Sending you to ")
-            .color(NamedTextColor.BLUE)
-            .append(Component.text(warpName, NamedTextColor.WHITE))
-            .append(Component.text("..."));
+        val warpingMessage = MessageProvider.getMessage(MessageType.Warping)
+            .replace("{warp}", warpName);
 
-        player.sendMessage(warpingMessage);
+        player.sendRichMessage(warpingMessage);
         player.teleportAsync(warpLocation);
         return true;
     }

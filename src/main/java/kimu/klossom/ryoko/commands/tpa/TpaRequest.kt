@@ -1,72 +1,53 @@
 package kimu.klossom.ryoko.commands.tpa
 
+import kimu.klossom.ryoko.providers.MessageProvider
+import kimu.klossom.ryoko.providers.MessageType
 import kimu.klossom.ryoko.providers.RamDatabaseProvider
+import kimu.klossom.ryoko.utils.checks.CommandChecks
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextComponent
-import net.kyori.adventure.text.event.ClickEvent
-import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
 class TpaRequest(private val plugin: Plugin) : Command("tpa") {
     init {
-        aliases = listOf("tparequest")
+        aliases = listOf("tparequest", "tpask")
         description = "Teleport to a player (if they accept)"
         usage = "/tpa <player>"
         // permission = "ryoko.tpa"
     }
 
     override fun execute(sender: CommandSender, commandLabel: String, args: Array<out String>?): Boolean {
-        if (sender !is Player) {
-            sender.sendPlainMessage("You need to be a player to use this command!");
+        val player = requireNotNull(CommandChecks.isSenderPlayer(sender)) {
             return false;
-        }
+        };
         if (args == null || args.size != 1) {
-            sender.sendPlainMessage(usageMessage);
+            sender.sendPlainMessage(usage);
             return false;
         }
 
         val targetPlayerName = args[0];
-        if (targetPlayerName == sender.name) {
-            val cantTeleportToSelf = Component.text("Why would you want to teleport to yourself...")
-                .color(NamedTextColor.RED);
-
-            sender.sendMessage(cantTeleportToSelf);
+        val targetPlayer = requireNotNull(CommandChecks.getOnlinePlayer(player, targetPlayerName, false)) {
             return false;
         }
 
-        val targetPlayer = requireNotNull(plugin.server.getPlayer(targetPlayerName)) {
-            val playerNotFound = Component.text("I can't find the player ")
-                .color(NamedTextColor.RED)
-                .append(Component.text(targetPlayerName, NamedTextColor.WHITE))
-                .append(Component.text("!"));
-
-            sender.sendMessage(playerNotFound);
-            return false;
-        };
-
         RamDatabaseProvider.set("tpa:${sender.name}", targetPlayerName);
+
         // Create background task to delete the request after 80 seconds
         GlobalScope.launch {
             delay(80000);
             RamDatabaseProvider.remove("tpa:${sender.name}");
         }
 
-        val gotTpaRequest = Component.text("You got a teleport request from ")
-            .color(NamedTextColor.BLUE)
-            .append(Component.text(targetPlayerName, NamedTextColor.WHITE))
-            .append(Component.text(" !\n"))
-            .append(Component.text("Accept ", NamedTextColor.GREEN))
-            .clickEvent(ClickEvent.runCommand("tpaccept $targetPlayerName"))
-            .append(Component.text("Reject ", NamedTextColor.GREEN))
-            .clickEvent(ClickEvent.runCommand("tpareject $targetPlayerName"))
-            .append(Component.text("Ignore after 80s", NamedTextColor.GRAY));
-        targetPlayer.sendMessage(gotTpaRequest)
+        val incomingTpaRequestMessage = MessageProvider.getMessage(MessageType.TpaIncoming)
+            .replace("{player}", player.name);
+        val requestedTpaMessage = MessageProvider.getMessage(MessageType.TpaRequested)
+            .replace("{player}", targetPlayerName);
+
+        targetPlayer.sendRichMessage(incomingTpaRequestMessage);
+        player.sendRichMessage(requestedTpaMessage);
         return true
     }
 }

@@ -1,9 +1,9 @@
 package kimu.klossom.ryoko.commands.tpa
 
+import kimu.klossom.ryoko.providers.MessageProvider
+import kimu.klossom.ryoko.providers.MessageType
 import kimu.klossom.ryoko.providers.RamDatabaseProvider
 import kimu.klossom.ryoko.utils.checks.CommandChecks
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.plugin.Plugin
@@ -17,42 +17,32 @@ class TpaAccept(private val plugin: Plugin) : Command("tpaccept") {
     }
 
     override fun execute(sender: CommandSender, commandLabel: String, args: Array<out String>?): Boolean {
-        val player = requireNotNull(CommandChecks().isSenderPlayer(sender)) {
-            sender.sendPlainMessage("You need to be a player to use this command!");
+        val player = requireNotNull(CommandChecks.isSenderPlayer(sender)) {
             return false;
-        };
-
+        }
         if (args == null || args.size != 1) {
-            sender.sendPlainMessage(usageMessage);
+            player.sendPlainMessage(usage);
             return false;
         }
 
         val requestingPlayerName = args[0];
-        if (requestingPlayerName == player.name) {
+        val requestingPlayer = requireNotNull(CommandChecks.getOnlinePlayer(player, requestingPlayerName, false)) {
             return false;
         }
 
-        val requestingPlayer = requireNotNull(plugin.server.getPlayer(args[0])) {
-            val playerNotFound = Component.text("Doesn't look like ")
-                .color(NamedTextColor.RED)
-                .append(Component.text(requestingPlayerName, NamedTextColor.WHITE))
-                .append(Component.text("!"));
-            player.sendPlainMessage("${args[0]} is not online!");
-            return false;
-        }
-
-        val externalPlayerRequest = RamDatabaseProvider.get("tpa:${requestingPlayer.name}");
+        val externalPlayerRequest = RamDatabaseProvider.get("tpa:${requestingPlayerName}");
         if (externalPlayerRequest == null || externalPlayerRequest != player.name) {
-            val playerNotFound = Component.text("Doesn't look like ")
-                .color(NamedTextColor.RED)
-                .append(Component.text(requestingPlayerName, NamedTextColor.WHITE))
-                .append(Component.text("!"));
+            val playerNotFoundMessage = MessageProvider.getMessage(MessageType.TpaAcceptNonExistent)
+                .replace("{player}", requestingPlayerName);
 
-            player.sendPlainMessage("Doesn't look like ${args[0]} has sent you a tpa request...");
+            requestingPlayer.sendRichMessage(playerNotFoundMessage);
             return false;
         }
 
-        requestingPlayer.sendPlainMessage("${player.name} accepted your request! Teleporting...");
+        val playerAcceptedTpaRequestMessage = MessageProvider.getMessage(MessageType.TpaAccepted)
+            .replace("{player}", player.name);
+
+        requestingPlayer.sendRichMessage(playerAcceptedTpaRequestMessage);
         requestingPlayer.teleportAsync(player.location);
         return true;
     }

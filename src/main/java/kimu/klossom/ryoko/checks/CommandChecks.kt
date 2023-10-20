@@ -1,4 +1,4 @@
-package kimu.klossom.ryoko.utils.checks
+package kimu.klossom.ryoko.checks
 
 import kimu.klossom.ryoko.providers.MessageProvider
 import kimu.klossom.ryoko.providers.MessageType

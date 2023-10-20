@@ -1,8 +1,8 @@
-package kimu.klossom.ryoko.commands.messages
+package kimu.klossom.ryoko.commands.social
 
 import kimu.klossom.ryoko.providers.MessageProvider
 import kimu.klossom.ryoko.providers.MessageType
-import kimu.klossom.ryoko.utils.checks.CommandChecks
+import kimu.klossom.ryoko.checks.CommandChecks
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.plugin.Plugin

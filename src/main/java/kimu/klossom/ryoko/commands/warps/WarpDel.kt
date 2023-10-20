@@ -1,9 +1,9 @@
 package kimu.klossom.ryoko.commands.warps
 
+import kimu.klossom.ryoko.checks.CommandChecks
 import kimu.klossom.ryoko.providers.MessageProvider
 import kimu.klossom.ryoko.providers.MessageType
 import kimu.klossom.ryoko.providers.YamlProvider
-import kimu.klossom.ryoko.utils.checks.CommandChecks
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.plugin.Plugin
@@ -25,8 +25,10 @@ class WarpDel(private val plugin: Plugin) : Command("warpdel") {
             return false;
         }
 
+        val warpFile = YamlProvider(plugin).getFile("warps");
+
         val warpName = args[0];
-        val chosenWarp = requireNotNull(YamlProvider(plugin).getFile("warps").get("${player.name}.${warpName}")) {
+        val chosenWarp = requireNotNull(warpFile.get(warpName)) {
             val warpNotFoundMessage = MessageProvider.getMessage(MessageType.WarpNotFound)
                 .replace("{warp}", warpName);
 
@@ -34,7 +36,8 @@ class WarpDel(private val plugin: Plugin) : Command("warpdel") {
             return false;
         };
 
-        YamlProvider(plugin).set("warps", "${player.name}.${warpName}", null);
+        warpFile.set(warpName, null);
+        YamlProvider(plugin).save(warpFile);
 
         val removedWarpMessage = MessageProvider.getMessage(MessageType.WarpNotFound)
             .replace("{warp}", warpName);

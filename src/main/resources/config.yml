@@ -1,7 +1,17 @@
-# Stuck? Check the docs at https://ryoko.klossom.io/docs #
+# Confused? Check the docs at https://klossom.io/ryoko/docs #
 ################################
 #        Ryoko  Options        #
 ################################
 # => Global options    /
 ######################/
 lang: en
+
+# https://klossom.io/ryoko/docs/modules #
+##################
+# => Modules    /
+###############/
+social-module: true
+warp-module: true
+home-module: true
+tpa-module: true
+spawn-module: false

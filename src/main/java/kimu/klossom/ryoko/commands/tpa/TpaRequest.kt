@@ -3,7 +3,7 @@ package kimu.klossom.ryoko.commands.tpa
 import kimu.klossom.ryoko.providers.MessageProvider
 import kimu.klossom.ryoko.providers.MessageType
 import kimu.klossom.ryoko.providers.RamDatabaseProvider
-import kimu.klossom.ryoko.utils.checks.CommandChecks
+import kimu.klossom.ryoko.checks.CommandChecks
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

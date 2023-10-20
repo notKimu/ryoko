@@ -1,0 +1,11 @@
+# https://klossom.io/ryoko/docs #
+#################################
+#        Ryoko  Spawning        #
+#################################
+location:
+
+disable-vanilla-welcome-message: false
+
+# Leave empty to disable
+welcome-message: ""
+goodbye-message: ""

@@ -3,12 +3,18 @@ package kimu.klossom.ryoko.providers
 object MessageProvider {
     private var messageList = HashMap<String, String>();
 
-    fun setMessages(messages: HashMap<String, String>) {
-        messageList = messages;
+    fun addMessage(key: String, value: String) {
+        messageList[key] = value;
     }
 
     fun getMessage(identifier: MessageType): String {
         return messageList[identifier.key] ?: "Message not found, contact an admin (they messed up something)";
+    }
+
+    fun removeMessages(messages: HashMap<String, String>) {
+        messages.forEach { (key, _) ->
+            messageList.remove(key);
+        }
     }
 }
 
@@ -19,7 +25,6 @@ enum class MessageType(val key: String) {
     PlayerRequestedSelf("player-requested-self"),
 
     DirectMessagePrefix("direct-message-prefix"),
-    DirectMessageToSelf("direct-message-to-self"),
 
     UnsecureTeleportLocation("teleport-unsecure-location"),
 
@@ -29,6 +34,13 @@ enum class MessageType(val key: String) {
     WarpListEmpty("warp-list-empty"),
     WarpNotFound("warp-not-found"),
 
+    HomeTeleporting("home-teleporting"),
+    HomeSet("home-set"),
+    HomeDelete("home-delete"),
+    HomeList("home-list"),
+    HomeListEmpty("home-list-empty"),
+    HomeNotFound("home-not-found"),
+
     TpaAccepted("tpa-accepted"),
     TpaIncoming("tpa-incoming"),
     TpaRejected("tpa-rejected"),
@@ -37,5 +49,7 @@ enum class MessageType(val key: String) {
     TpaAcceptNonExistent("tpa-accept-non-existent"),
     TpaRejectNonExistent("tpa-reject-non-existent"),
     TpaAcceptedSelf("tpa-accepted-self"),
-    TpaRejectedSelf("tpa-rejected-self");
+    TpaRejectedSelf("tpa-rejected-self"),
+
+    SpawnPointSet("spawn-point-set");
 }

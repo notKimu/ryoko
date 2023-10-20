@@ -2,36 +2,52 @@
 #      https://webui.advntr.dev/     #
 ######################################
 
-### Command usage
-player-only-command: "You need to be a player to use this command!"
+### Core Messages
+core-module:
+  player-only-command: "You need to be a player to use this command!"
 
-### Getting Players
-player-not-online: "<white>{player}</white> <red>is not on the server!</red>"
-player-requested-self: "<red>You can't use this command on yourself!</red>"
+  player-not-online: "<white>{player}</white> <red>is not on the server!</red>"
+  player-requested-self: "<red>You can't use this command on yourself!</red>"
+
+  teleport-unsecure-location: "<red>The spot you want to teleport to is unsecure! (there is void below)</red>"
+
+#####################
+# # #  Modules  # # #
+#####################
 
 ### Direct Messages
-direct-message-prefix: "{player} => {message}"
-
-direct-message-to-self: "<red>You can't send a direct message to yourself...</red>"
-
-### Teleporting
-teleport-unsecure-location: "<red>The spot you want to teleport to is unsecure! (there is void below)</red>"
+social-module:
+  direct-message-prefix: "{player} => {message}"
 
 ### Warps
-warping: "<blue>Travelling to <white>{warp}</white>...</blue>"
-warp-set: "<green>The warp <white>{warp}</white> was set!</green>"
-warp-list: "<blue>Your warps: </blue> <white>{warps}</white>"
-warp-list-empty: "<red>You have no warps set!</red>"
-warp-not-found: "<red>The warp <white>{warp}</white> doesn't exist!</red>"
+warp-module:
+  warping: "<blue>Travelling to <white>{warp}</white>...</blue>"
+  warp-set: "<green>The warp <white>{warp}</white> was set!</green>"
+  warp-list: "<blue>Your warps: </blue> <white>{warps}</white>"
+  warp-list-empty: "<red>You have no warps set!</red>"
+  warp-not-found: "<red>The warp <white>{warp}</white> doesn't exist!</red>"
+
+### Homes
+home-module:
+  home-teleporting: "<blue>Travelling to your home <white>{home}</white>...</blue>"
+  home-set: "<green>Your new home <white>{home}</white> was set!</green>"
+  home-delete: "<red>Deleted your home <white>{home}</white>!</red>"
+  home-list: "<blue>Homes: <white>{homes}</white></blue>"
+  home-list-empty: "<red>You have no homes set!</red>"
+  home-not-found: "<red>You don't have any home named <white>{home}</white></red>"
 
 ### TPA
-tpa-accepted: "<white>{player}</white> <green>accepted your TPA request! teleporting...</green>"
-tpa-incoming: "<blue>You got a teleport request from</blue> <white>{player}</white>\n<green>Accept</green> <red>Reject</red> <gray>Ignore after 80s</gray>"
-tpa-rejected: "<white>{player}'s</white> <red>teleport request was rejected</red>"
-tpa-got-rejected: "<red>Oof. <white>{player}</white> rejected your teleport request...</red>"
-tpa-requested: "<blue>Teleport petition sent to <white>{player}</white>! Now we wait...</blue>"
+tpa-module:
+  tpa-accepted: "<white>{player}</white> <green>accepted your TPA request! teleporting...</green>"
+  tpa-incoming: "<blue>You got a teleport request from</blue> <white>{player}</white>\n<green>Accept</green> <red>Reject</red> <gray>Ignore after 80s</gray>"
+  tpa-rejected: "<white>{player}'s</white> <red>teleport request was rejected</red>"
+  tpa-got-rejected: "<red>Oof. <white>{player}</white> rejected your teleport request...</red>"
+  tpa-requested: "<blue>Teleport petition sent to <white>{player}</white>! Now we wait...</blue>"
+  tpa-accept-non-existent: "<red>I don't think <white>{player}</white> asked you for a teleport...</red>"
+  tpa-reject-non-existent: "<red>Doesn't look like <white>{player}</white> asked you for a teleport...</red>"
+  tpa-accepted-self: "<red>How'd you accept a teleport request to yourself...</red>"
+  tpa-rejected-self: "<red>How do you reject a teleport request of... yourself...</red>"
 
-tpa-accept-non-existent: "<red>I don't think <white>{player}</white> asked you for a teleport...</red>"
-tpa-reject-non-existent: "<red>Doesn't look like <white>{player}</white> asked you for a teleport...</red>"
-tpa-accepted-self: "<red>How'd you accept a teleport request to yourself...</red>"
-tpa-rejected-self: "<red>How do you reject a teleport request of... yourself...</red>"
+### Spawn
+spawn-module:
+  spawn-point-set: "<green>The spawn point was set at <white>{location}</white>!</green>"
